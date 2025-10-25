@@ -3,22 +3,31 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Calendar, Eye, EyeOff } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
-  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [keepSignedIn, setKeepSignedIn] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: true, 
+      callbackUrl: "/",
+    });
+
+    console.log(result);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex items-center justify-center p-6">
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Left Side - Branding */}
+
         <div className="text-center lg:text-left">
           <Link href="/" className="inline-block">
             <div className="flex justify-center lg:justify-start mb-8">
@@ -38,7 +47,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Right Side - Login Form */}
         <div className="bg-white rounded-3xl shadow-2xl p-12">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Login</h2>
@@ -51,6 +59,8 @@ export default function LoginPage() {
               <input
                 type="email"
                 placeholder="hello@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                 required
               />
@@ -67,6 +77,8 @@ export default function LoginPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all pr-12"
                   required
                 />

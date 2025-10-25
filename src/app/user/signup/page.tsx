@@ -7,10 +7,10 @@ import { Calendar, Eye, EyeOff } from 'lucide-react';
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [role, setRole] = useState('user');
+  const [role, setRole] = useState('member');
   const [tel, setTel] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const userData = {
@@ -18,8 +18,24 @@ export default function SignUpPage() {
       email: (document.getElementById('email') as HTMLInputElement)?.value,
       password: (document.getElementById('password') as HTMLInputElement)?.value,
       tel,
-      role,
+      role
     };
+
+    const res = await fetch("http://localhost:5000/api/v1/auth/register", {
+      method : "POST",
+      headers: {
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify(userData)
+    });
+
+    if(!res.ok){
+      const err = await res.json();
+      throw new Error(err.message || "Registration failed");
+    }else{
+      alert("Register success! You can log in now.");
+      window.location.href = "/user/login";
+    }
   };
 
   return (
@@ -109,7 +125,7 @@ export default function SignUpPage() {
                 onChange={(e) => setRole(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none bg-white"
               >
-                <option value="user">User</option>
+                <option value="member">Member</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
@@ -141,7 +157,7 @@ export default function SignUpPage() {
 
           <div className="mt-8 text-center">
             <span className="text-gray-600">Already have an account? </span>
-            <Link href="/login" className="text-red-600 hover:text-red-700 font-medium">
+            <Link href="/user/login" className="text-red-600 hover:text-red-700 font-medium">
               Sign in here
             </Link>
           </div>
