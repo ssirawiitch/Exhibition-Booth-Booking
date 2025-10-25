@@ -25,7 +25,7 @@ export default function HomePage() {
               Discover, compare, and book exhibition booths worldwide. Streamline your event planning with real-time availability, instant confirmations, and comprehensive venue details.
             </p>
             <div className="flex items-center space-x-4">
-              <Link href="/signup" className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl">
+              <Link href="/user/signup" className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl">
                 Start Booking Now
               </Link>
               <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all">
@@ -93,7 +93,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">Ready to Book Your Exhibition Booth?</h2>
           <p className="text-xl text-red-100 mb-8">Join thousands of exhibitors who trust ExpoBook for their event needs</p>
-          <Link href="/signup" className="inline-block bg-white text-red-600 px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl">
+          <Link href="/user/signup" className="inline-block bg-white text-red-600 px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl">
             Get Started for Free
           </Link>
           <p className="m-5">By Will and Drew</p>

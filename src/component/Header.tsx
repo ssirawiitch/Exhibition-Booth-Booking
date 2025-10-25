@@ -13,10 +13,10 @@ export default function Header() {
             </div>
             <div className="flex items-center space-x-6">
                 <a href="#features" className="text-gray-600 hover:text-red-600 transition-colors">Features</a>
-                <Link href="/login" className="text-red-600 hover:text-red-700 font-medium transition-colors">
+                <Link href="/user/login" className="text-red-600 hover:text-red-700 font-medium transition-colors">
                 Login
                 </Link>
-                <Link href="/signup" className="bg-red-600 text-white px-6 py-2.5 rounded-full hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg">
+                <Link href="/user/signup" className="bg-red-600 text-white px-6 py-2.5 rounded-full hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg">
                 Get Started
                 </Link>
             </div>
