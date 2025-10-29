@@ -1,11 +1,15 @@
-// app/page.tsx
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, MapPin, Users, TrendingUp } from 'lucide-react';
+import { MapPin, Users, TrendingUp } from 'lucide-react';
 import Header from '../component/Header';
 import FeatureSection from '@/component/FeatureSection';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 
-export default function HomePage() {
+export default async function HomePage() {
+
+  const session = await getServerSession(authOptions);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
       <Header />
@@ -25,9 +29,14 @@ export default function HomePage() {
               Discover, compare, and book exhibition booths worldwide. Streamline your event planning with real-time availability, instant confirmations, and comprehensive venue details.
             </p>
             <div className="flex items-center space-x-4">
-              <Link href="/user/signup" className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl">
+              {
+                session ? 
+                <Link href="/user/exhibition" className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl">
                 Start Booking Now
-              </Link>
+                </Link> : <Link href="/user/signup" className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl">
+                Start Booking Now
+                </Link>
+              }
               <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all">
                 Watch Demo
               </button>
@@ -89,7 +98,10 @@ export default function HomePage() {
       <FeatureSection />
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-red-600 to-red-700 py-20">
+      {
+        session ? <div className="bg-gradient-to-r from-red-600 to-red-700 py-10"><div className="max-w-4xl mx-auto px-6 text-center">
+          <p className="m-5 text-white">By Will and Drew</p></div>
+        </div> : <div className="bg-gradient-to-r from-red-600 to-red-700 py-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">Ready to Book Your Exhibition Booth?</h2>
           <p className="text-xl text-red-100 mb-8">Join thousands of exhibitors who trust ExpoBook for their event needs</p>
@@ -97,8 +109,9 @@ export default function HomePage() {
             Get Started for Free
           </Link>
           <p className="m-5">By Will and Drew</p>
+          </div>
         </div>
+      }
       </div>
-    </div>
   );
 }
