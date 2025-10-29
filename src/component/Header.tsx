@@ -17,9 +17,10 @@ export default async function Header() {
                 <span className="text-2xl font-bold text-gray-900">ExpoBook</span>
             </div>
             {
-                session ? <Link href="/api/auth/signout" >
-                    <div className="text-red-600 hover:text-red-700 font-medium transition-colors">Sign-Out of {session.user?.name} 
-                </div></Link> : 
+                session ? <div><div className="flex items-center">
+                    <Link href=""><div className="text-red-600 hover:text-red-700 font-medium transition-colors">My Booking</div></Link>
+                    <Link href="/api/auth/signout" ><div className="text-red-600 hover:text-red-700 font-medium transition-colors ml-7">Sign-Out of {session.user?.name} </div></Link>
+                    </div></div> : 
                 <div className="flex items-center space-x-6">
                     <Link href="/user/login" className="text-red-600 hover:text-red-700 font-medium transition-colors">
                     Login
