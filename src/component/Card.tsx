@@ -2,7 +2,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Calendar, MapPin, Square, Star, Users } from 'lucide-react';
+import Image from 'next/image';
+import { Calendar, MapPin, Square , Users } from 'lucide-react';
 
 interface CardProps {
     id: number;
@@ -43,10 +44,22 @@ export default function Card({
     const totalBooths = smallBoothQuota + bigBoothQuota;
 
     return (
-        <div className="p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-3">{name}</h3>
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            {/* Image Section */}
+            <div className="relative w-full h-48">
+                <Image
+                    src={posterPicture}
+                    alt={name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+            </div>
             
-            <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
+            <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{name}</h3>
+                
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
             
             <div className="space-y-3 mb-4">
                 <div className="flex items-start space-x-2 text-gray-600">
@@ -86,6 +99,7 @@ export default function Card({
             >
                 View Details & Book
             </Link>
+        </div>
         </div>
     );
 }

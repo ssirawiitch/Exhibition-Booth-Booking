@@ -17,7 +17,7 @@ const availableBooths = [
     durationDay: 4,
     smallBoothQuota: 12,
     bigBoothQuota: 8,
-    posterPicture: "https://example.com/poster1.jpg",
+    posterPicture: "/images/exhibitions/TechSummit.jpg",
     image: "🏢",
     type: "Technology"
   },
@@ -30,7 +30,7 @@ const availableBooths = [
     durationDay: 4,
     smallBoothQuota: 10,
     bigBoothQuota: 5,
-    posterPicture: "https://example.com/poster2.jpg",
+    posterPicture: "/images/exhibitions/FoodExpo.jpg",
     image: "🍽️",
     type: "Food & Beverage"
   },
@@ -43,7 +43,7 @@ const availableBooths = [
     durationDay: 6,
     smallBoothQuota: 5,
     bigBoothQuota: 5,
-    posterPicture: "https://example.com/poster3.jpg",
+    posterPicture: "/images/exhibitions/MotorShow.jpg",
     image: "🚗",
     type: "Automotive"
   },
@@ -56,7 +56,7 @@ const availableBooths = [
     durationDay: 6,
     smallBoothQuota: 15,
     bigBoothQuota: 10,
-    posterPicture: "https://example.com/poster4.jpg",
+    posterPicture: "/images/exhibitions/FashionWeek.jpg",
     image: "👗",
     type: "Fashion"
   },
@@ -69,7 +69,7 @@ const availableBooths = [
     durationDay: 5,
     smallBoothQuota: 8,
     bigBoothQuota: 10,
-    posterPicture: "https://example.com/poster5.jpg",
+    posterPicture: "/images/exhibitions/HealthSummit.jpg",
     image: "⚕️",
     type: "Healthcare"
   },
@@ -82,7 +82,7 @@ const availableBooths = [
     durationDay: 4,
     smallBoothQuota: 20,
     bigBoothQuota: 10,
-    posterPicture: "https://example.com/poster6.jpg",
+    posterPicture: "/images/exhibitions/EducationExpo.jpg",
     image: "📚",
     type: "Education"
   }
@@ -166,13 +166,6 @@ export default function ExhibitionPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredBooths.map((booth) => (
               <div key={booth.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2">
-                {/* Card Header */}
-                <div className="bg-gradient-to-br from-red-500 to-red-700 p-8 text-center">
-                  <div className="text-6xl mb-2">{booth.image}</div>
-                  <div className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-medium">
-                    {booth.type}
-                  </div>
-                </div>
 
                 {/* Card Body - Using Updated Card Component */}
                 <Card
