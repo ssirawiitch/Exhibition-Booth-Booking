@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Calendar, MapPin , Square, Star } from 'lucide-react';
 import Header from '@/component/Header';
+import Card from '@/component/Card';
 
 // Mock data for available booths
 const availableBooths = [
@@ -201,50 +202,16 @@ export default function ExhibitionPage() {
                 </div>
 
                 {/* Card Body */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{booth.name}</h3>
-                  
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-start space-x-2 text-gray-600">
-                      <MapPin className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">{booth.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-gray-600">
-                      <Calendar className="w-5 h-5 text-red-600 flex-shrink-0" />
-                      <span className="text-sm">{booth.date}</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-gray-600">
-                      <Square className="w-5 h-5 text-red-600 flex-shrink-0" />
-                      <span className="text-sm">Booth Size: {booth.size}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                      <span className="font-semibold text-gray-900">{booth.rating}</span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      <span className="font-semibold text-green-600">{booth.available}</span> / {booth.total} available
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <div className="text-sm text-gray-600">Starting from</div>
-                      <div className="text-2xl font-bold text-red-600">
-                        ${booth.price.toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-
-                  <Link
-                    href={`/exhibitions/${booth.id}`}
-                    className="block w-full bg-red-600 text-white text-center py-3 rounded-xl font-medium hover:bg-red-700 transition-all transform hover:scale-105"
-                  >
-                    View Details & Book
-                  </Link>
-                </div>
+                <Card
+                  name={booth.name}
+                  location={booth.location}
+                  date={booth.date}
+                  size={booth.size}
+                  available={booth.available}
+                  rating={booth.rating}
+                  total={booth.total}
+                  price={booth.price}
+                />
               </div>
             ))}
           </div>
