@@ -1,88 +1,88 @@
+// app/exhibitions/page.tsx
 'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Calendar, MapPin , Square, Star } from 'lucide-react';
 import Header from '@/component/Header';
 import Card from '@/component/Card';
 
-// Mock data for available booths
+// Updated mock data matching the new schema
 const availableBooths = [
   {
     id: 1,
     name: "Tech Summit 2025",
-    location: "Bangkok International Trade Center",
-    date: "March 15-18, 2025",  
-    price: 5000,
-    size: "3x3m",
-    available: 12,
-    total: 20,
-    rating: 4.8,
+    description: "The largest technology exhibition in Southeast Asia featuring AI, IoT, and emerging technologies.",
+    venue: "Bangkok International Trade Center",
+    startDate: "2025-03-15",
+    durationDay: 4,
+    smallBoothQuota: 12,
+    bigBoothQuota: 8,
+    posterPicture: "https://example.com/poster1.jpg",
     image: "🏢",
     type: "Technology"
   },
   {
     id: 2,
     name: "Food & Beverage Expo",
-    location: "Queen Sirikit National Convention Center",
-    date: "April 5-8, 2025",
-    price: 3500,
-    size: "2x3m",
-    available: 8,
-    total: 15,
-    rating: 4.6,
+    description: "Discover the latest trends in food and beverage industry with world-class exhibitors.",
+    venue: "Queen Sirikit National Convention Center",
+    startDate: "2025-04-05",
+    durationDay: 4,
+    smallBoothQuota: 10,
+    bigBoothQuota: 5,
+    posterPicture: "https://example.com/poster2.jpg",
     image: "🍽️",
     type: "Food & Beverage"
   },
   {
     id: 3,
     name: "International Auto Show",
-    location: "Impact Exhibition Center",
-    date: "May 20-25, 2025",
-    price: 8000,
-    size: "5x5m",
-    available: 5,
-    total: 10,
-    rating: 4.9,
+    description: "Experience the future of automotive with electric vehicles and autonomous driving technology.",
+    venue: "Impact Exhibition Center",
+    startDate: "2025-05-20",
+    durationDay: 6,
+    smallBoothQuota: 5,
+    bigBoothQuota: 5,
+    posterPicture: "https://example.com/poster3.jpg",
     image: "🚗",
     type: "Automotive"
   },
   {
     id: 4,
     name: "Fashion Week Asia",
-    location: "Central World Convention Hall",
-    date: "June 10-15, 2025",
-    price: 6500,
-    size: "4x4m",
-    available: 15,
-    total: 25,
-    rating: 4.7,
+    description: "Showcase your brand at Asia's premier fashion event with designers from around the world.",
+    venue: "Central World Convention Hall",
+    startDate: "2025-06-10",
+    durationDay: 6,
+    smallBoothQuota: 15,
+    bigBoothQuota: 10,
+    posterPicture: "https://example.com/poster4.jpg",
     image: "👗",
     type: "Fashion"
   },
   {
     id: 5,
     name: "Healthcare Innovation Summit",
-    location: "Bangkok Convention Center",
-    date: "July 8-12, 2025",
-    price: 7000,
-    size: "3x4m",
-    available: 10,
-    total: 18,
-    rating: 4.8,
+    description: "Explore cutting-edge medical technology and healthcare solutions for the future.",
+    venue: "Bangkok Convention Center",
+    startDate: "2025-07-08",
+    durationDay: 5,
+    smallBoothQuota: 8,
+    bigBoothQuota: 10,
+    posterPicture: "https://example.com/poster5.jpg",
     image: "⚕️",
     type: "Healthcare"
   },
   {
     id: 6,
     name: "Education & Training Expo",
-    location: "Bitec Exhibition Center",
-    date: "August 22-25, 2025",
-    price: 4000,
-    size: "3x3m",
-    available: 20,
-    total: 30,
-    rating: 4.5,
+    description: "Connect with educational institutions and training providers from around the globe.",
+    venue: "Bitec Exhibition Center",
+    startDate: "2025-08-22",
+    durationDay: 4,
+    smallBoothQuota: 20,
+    bigBoothQuota: 10,
+    posterPicture: "https://example.com/poster6.jpg",
     image: "📚",
     type: "Education"
   }
@@ -96,10 +96,14 @@ export default function ExhibitionPage() {
 
   const filteredBooths = availableBooths.filter(booth => {
     const matchesSearch = booth.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         booth.location.toLowerCase().includes(searchTerm.toLowerCase());
+                         booth.venue.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === 'All' || booth.type === selectedType;
     return matchesSearch && matchesType;
   });
+
+  const totalSmallBooths = availableBooths.reduce((sum, booth) => sum + booth.smallBoothQuota, 0);
+  const totalBigBooths = availableBooths.reduce((sum, booth) => sum + booth.bigBoothQuota, 0);
+  const totalBooths = totalSmallBooths + totalBigBooths;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
@@ -113,43 +117,12 @@ export default function ExhibitionPage() {
           <div className="text-center text-white">
             <h1 className="text-5xl font-bold mb-4">Available Exhibition Booths</h1>
             <p className="text-xl text-red-100 mb-8">Find the perfect booth for your next exhibition</p>
-            
-            {/* Search and Filter */}
-            {/* <div className="max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl p-6 shadow-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  <div className="md:col-span-8 relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="text"
-                      placeholder="Search by name or location..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900"
-                    />
-                  </div>
-                  <div className="md:col-span-4 relative">
-                    <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <select
-                      value={selectedType}
-                      onChange={(e) => setSelectedType(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900 appearance-none cursor-pointer"
-                    >
-                      {types.map(type => (
-                        <option key={type} value={type}>{type}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-
           </div>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="max-w-7xl mx-auto px-6 pt-15 pb-10">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 -mt-20">
           <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
             <div className="text-4xl mb-2">🏢</div>
@@ -163,7 +136,7 @@ export default function ExhibitionPage() {
           </div>
           <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
             <div className="text-4xl mb-2">🎫</div>
-            <div className="text-3xl font-bold text-gray-900">70</div>
+            <div className="text-3xl font-bold text-gray-900">{totalBooths}</div>
             <div className="text-gray-600">Total Booths</div>
           </div>
           <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
@@ -201,16 +174,17 @@ export default function ExhibitionPage() {
                   </div>
                 </div>
 
-                {/* Card Body */}
+                {/* Card Body - Using Updated Card Component */}
                 <Card
+                  id={booth.id}
                   name={booth.name}
-                  location={booth.location}
-                  date={booth.date}
-                  size={booth.size}
-                  available={booth.available}
-                  rating={booth.rating}
-                  total={booth.total}
-                  price={booth.price}
+                  description={booth.description}
+                  venue={booth.venue}
+                  startDate={booth.startDate}
+                  durationDay={booth.durationDay}
+                  smallBoothQuota={booth.smallBoothQuota}
+                  bigBoothQuota={booth.bigBoothQuota}
+                  posterPicture={booth.posterPicture}
                 />
               </div>
             ))}
