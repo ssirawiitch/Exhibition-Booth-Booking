@@ -37,9 +37,10 @@ export default async function HomePage() {
                 Start Booking Now
                 </Link>
               }
-              <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all">
+              <Link className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all"
+              href="/demo">
                 Watch Demo
-              </button>
+              </Link>
             </div>
             <div className="mt-12 flex items-center space-x-8">
               <div>

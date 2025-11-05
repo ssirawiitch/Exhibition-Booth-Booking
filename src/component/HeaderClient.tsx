@@ -5,7 +5,9 @@ import { Calendar } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 export default function HeaderClient() {
+
   const { data: session } = useSession();
+  
   return (
     <nav className="bg-white shadow-sm fixed w-full z-10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
