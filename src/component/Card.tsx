@@ -94,7 +94,7 @@ export default function Card({
             </div>
 
             <Link
-                href={`/exhibitions/${id}`}
+                href={`/user/exhibition/${id}`}
                 className="block w-full bg-red-600 text-white text-center py-3 rounded-xl font-medium hover:bg-red-700 transition-all transform hover:scale-105"
             >
                 View Details & Book

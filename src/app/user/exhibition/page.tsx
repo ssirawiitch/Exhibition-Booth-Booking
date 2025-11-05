@@ -1,10 +1,12 @@
 // app/exhibitions/page.tsx
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Header from '@/component/Header';
-import Card from '@/component/Card';
+import StatSection from '@/component/StatSection';
+import getExhibitions from '@/libs/getExhibitions';
+import { Suspense } from "react"; 
+import { LinearProgress } from "@mui/material";
+import ExhibitionCardSection from '@/component/ExhibitionCardSection';
 
 // Updated mock data matching the new schema
 const availableBooths = [
@@ -17,9 +19,7 @@ const availableBooths = [
     durationDay: 4,
     smallBoothQuota: 12,
     bigBoothQuota: 8,
-    posterPicture: "/images/exhibitions/TechSummit.jpg",
-    image: "🏢",
-    type: "Technology"
+    posterPicture: "/images/exhibitions/TechSummit.jpg"
   },
   {
     id: 2,
@@ -30,9 +30,7 @@ const availableBooths = [
     durationDay: 4,
     smallBoothQuota: 10,
     bigBoothQuota: 5,
-    posterPicture: "/images/exhibitions/FoodExpo.jpg",
-    image: "🍽️",
-    type: "Food & Beverage"
+    posterPicture: "/images/exhibitions/FoodExpo.jpg"
   },
   {
     id: 3,
@@ -43,9 +41,7 @@ const availableBooths = [
     durationDay: 6,
     smallBoothQuota: 5,
     bigBoothQuota: 5,
-    posterPicture: "/images/exhibitions/MotorShow.jpg",
-    image: "🚗",
-    type: "Automotive"
+    posterPicture: "/images/exhibitions/MotorShow.jpg"
   },
   {
     id: 4,
@@ -56,9 +52,7 @@ const availableBooths = [
     durationDay: 6,
     smallBoothQuota: 15,
     bigBoothQuota: 10,
-    posterPicture: "/images/exhibitions/FashionWeek.jpg",
-    image: "👗",
-    type: "Fashion"
+    posterPicture: "/images/exhibitions/FashionWeek.jpg"
   },
   {
     id: 5,
@@ -69,9 +63,7 @@ const availableBooths = [
     durationDay: 5,
     smallBoothQuota: 8,
     bigBoothQuota: 10,
-    posterPicture: "/images/exhibitions/HealthSummit.jpg",
-    image: "⚕️",
-    type: "Healthcare"
+    posterPicture: "/images/exhibitions/HealthSummit.jpg"
   },
   {
     id: 6,
@@ -82,28 +74,29 @@ const availableBooths = [
     durationDay: 4,
     smallBoothQuota: 20,
     bigBoothQuota: 10,
-    posterPicture: "/images/exhibitions/EducationExpo.jpg",
-    image: "📚",
-    type: "Education"
+    posterPicture: "/images/exhibitions/EducationExpo.jpg"
   }
 ];
 
 export default function ExhibitionPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState('All');
 
-  const types = ['All', 'Technology', 'Food & Beverage', 'Automotive', 'Fashion', 'Healthcare', 'Education'];
+  const exhibits = getExhibitions()
+  
+  // const [searchTerm, setSearchTerm] = useState('');
+  // const [selectedType, setSelectedType] = useState('All');
 
-  const filteredBooths = availableBooths.filter(booth => {
-    const matchesSearch = booth.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         booth.venue.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === 'All' || booth.type === selectedType;
-    return matchesSearch && matchesType;
-  });
+  // const types = ['All', 'Technology', 'Food & Beverage', 'Automotive', 'Fashion', 'Healthcare', 'Education'];
 
-  const totalSmallBooths = availableBooths.reduce((sum, booth) => sum + booth.smallBoothQuota, 0);
-  const totalBigBooths = availableBooths.reduce((sum, booth) => sum + booth.bigBoothQuota, 0);
-  const totalBooths = totalSmallBooths + totalBigBooths;
+  // const filteredBooths = availableBooths.filter(booth => {
+  //   const matchesSearch = booth.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //                        booth.venue.toLowerCase().includes(searchTerm.toLowerCase());
+  //   const matchesType = selectedType === 'All' || booth.type === selectedType;
+  //   return matchesSearch && matchesType;
+  // });
+
+  // const totalSmallBooths = availableBooths.reduce((sum, booth) => sum + booth.smallBoothQuota, 0);
+  // const totalBigBooths = availableBooths.reduce((sum, booth) => sum + booth.bigBoothQuota, 0);
+  // const totalBooths = totalSmallBooths + totalBigBooths;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
@@ -121,69 +114,12 @@ export default function ExhibitionPage() {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 -mt-20">
-          <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
-            <div className="text-4xl mb-2">🏢</div>
-            <div className="text-3xl font-bold text-gray-900">{availableBooths.length}</div>
-            <div className="text-gray-600">Available Events</div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
-            <div className="text-4xl mb-2">📍</div>
-            <div className="text-3xl font-bold text-gray-900">6</div>
-            <div className="text-gray-600">Locations</div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
-            <div className="text-4xl mb-2">🎫</div>
-            <div className="text-3xl font-bold text-gray-900">{totalBooths}</div>
-            <div className="text-gray-600">Total Booths</div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:-translate-y-2 transition-all">
-            <div className="text-4xl mb-2">⭐</div>
-            <div className="text-3xl font-bold text-gray-900">4.7</div>
-            <div className="text-gray-600">Avg Rating</div>
-          </div>
-        </div>
-      </div>
+      {/* Stats Section and Booth Section */}
+      <Suspense fallback={<p>Loading ... <LinearProgress /></p>}>
+        <StatSection exhibitJson= {exhibits}/>
+        <ExhibitionCardSection exhibitJson= {exhibits}/>
+      </Suspense> 
 
-      {/* Booths Grid */}
-      <div className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            {filteredBooths.length} Exhibition{filteredBooths.length !== 1 ? 's' : ''} Found
-          </h2>
-          <p className="text-gray-600">Browse and book your perfect exhibition booth</p>
-        </div>
-
-        {filteredBooths.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No exhibitions found</h3>
-            <p className="text-gray-600">Try adjusting your search or filters</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBooths.map((booth) => (
-              <div key={booth.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2">
-
-                {/* Card Body - Using Updated Card Component */}
-                <Card
-                  id={booth.id}
-                  name={booth.name}
-                  description={booth.description}
-                  venue={booth.venue}
-                  startDate={booth.startDate}
-                  durationDay={booth.durationDay}
-                  smallBoothQuota={booth.smallBoothQuota}
-                  bigBoothQuota={booth.bigBoothQuota}
-                  posterPicture={booth.posterPicture}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 py-20">
