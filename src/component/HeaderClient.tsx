@@ -3,10 +3,34 @@
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 export default function HeaderClient() {
-
   const { data: session } = useSession();
+  const [userRole, setUserRole] = useState<string>('');
+
+  useEffect(() => {
+    async function fetchData() {
+      if (session?.user?.token) {
+        try {
+          const response = await fetch('http://localhost:5000/api/v1/auth/me', {
+            method: "GET",
+            headers: {
+              authorization: `Bearer ${session.user.token}`
+            }
+          });
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const result = await response.json();
+          setUserRole(result.data.role);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+    fetchData();
+  }, [session]);
   
   return (
     <nav className="bg-white shadow-sm fixed w-full z-10">
@@ -22,9 +46,9 @@ export default function HeaderClient() {
         {/* Menu */}
         {session ? (
           <div className="flex items-center">
-            <Link href="">
+            <Link href={userRole === 'admin' ? '/admin/home' : ''}>
               <div className="text-red-600 hover:text-red-700 font-medium transition-colors">
-                My Booking
+                {userRole === 'admin' ? 'Manage' : 'My Booking'}
               </div>
             </Link>
             <Link href="/api/auth/signout">
