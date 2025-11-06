@@ -7,6 +7,9 @@ import getExhibitions from '@/libs/getExhibitions';
 import StatAdminSection from '@/component/StatAdminSection';
 import Image from 'next/image';
 import AddExhibitionModal from '@/component/AddExhibitionModal';
+import deleteExhibition from '@/libs/deleteExhibition'
+import { useSession } from 'next-auth/react';
+import EditExhibitionModal from '@/component/EditExhibitionModal';
 
 type Exhibition = {
   _id: string;
@@ -27,11 +30,16 @@ type Exhibition = {
 type ModalMode = 'add' | 'edit' | 'view' | null;
 
 export default function AdminHomePage() {
+
+  const {data:session} = useSession();
+  const tokens = session?.user?.token as string | undefined;
+
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [selectedExhibition, setSelectedExhibition] = useState<Exhibition | null>(null);
 
+  // โหลดข้อมูลเมื่อเปิดหน้า
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,9 +65,21 @@ export default function AdminHomePage() {
     setSelectedExhibition(null);
   };
 
-  const handleDelete = (id: string) => {
-    setExhibitions(exhibitions.filter((ex) => ex._id !== id));
-  };
+  const handleDelete = async (id: string) => {
+    const confirmDelete = confirm('Are you sure you want to delete this exhibition?')
+    if (!confirmDelete) return
+
+    try {
+      if(!tokens) return alert('Not authenticated')
+      await deleteExhibition(tokens, id)
+
+      setExhibitions((prev) => prev.filter((ex) => ex._id !== id))
+      alert('Exhibition deleted successfully ✅')
+    } catch (err) {
+      console.error('Error deleting exhibition:', err)
+      alert('Failed to delete exhibition ❌')
+    }
+  }
 
   if (loading) {
     return (
@@ -206,6 +226,19 @@ export default function AdminHomePage() {
               const res = await getExhibitions();
               setExhibitions(res.data || []);
             })();
+          }}
+        />
+      )}
+
+      {/* Edit Modal */}
+      {modalMode === 'edit' && selectedExhibition && (
+        <EditExhibitionModal
+          exhibition={selectedExhibition}
+          token={tokens || ''}
+          onClose={closeModal}
+          onSuccess={async () => {
+            const res = await getExhibitions()
+            setExhibitions(res.data || [])
           }}
         />
       )}
