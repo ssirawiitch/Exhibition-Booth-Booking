@@ -1,5 +1,9 @@
-import HeaderClient from './HeaderClient';
+import HeaderClient from "./HeaderClient";
 
 export default function Header() {
-    return <HeaderClient />;
+  return (
+    <div className="">
+      <HeaderClient />
+    </div>
+  );
 }
