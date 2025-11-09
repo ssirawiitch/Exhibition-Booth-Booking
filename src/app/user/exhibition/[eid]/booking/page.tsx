@@ -1,9 +1,8 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import BookingForm from "@/component/Bookingform"; // ⚠️ ตรวจสอบ path import ให้ถูกต้อง (ผมแก้จาก @/component เป็น @/components ตามมาตรฐานทั่วไป)
-import getExhibitionById from "@/libs/getExhibitionbyID"; // ⚠️ ตรวจสอบ path import
+import BookingForm from "@/component/Bookingform";
+import getExhibitionById from "@/libs/getExhibitionbyID";
 import { getServerSession } from "next-auth";
 
-// 1. กำหนด type ของ props ให้รองรับ Promise
 type Props = {
   params: Promise<{ eid: string }>;
 };
