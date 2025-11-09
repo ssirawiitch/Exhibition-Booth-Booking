@@ -1,6 +1,7 @@
 import getExhibition from "@/libs/getExhibition";
 import Image from "next/image";
 import Link from "next/link";
+import Header from "@/component/Header";
 
 export default async function ExhibitionDetailPage({
   params,
@@ -19,7 +20,9 @@ export default async function ExhibitionDetailPage({
   const formattedDate = startDate.toLocaleDateString("en-US", options);
 
   return (
-    <main className="container mx-auto py-45 px-4 sm:px-6 lg:px-8 min-h-screen">
+    <main>
+    <Header />
+    <div className="container mx-auto py-45 px-4 sm:px-6 lg:px-8 min-h-screen">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="md:flex">
           <div className="md:w-1/2 lg:w-2/5 relative min-h-[300px] md:min-h-[500px]">
@@ -45,7 +48,7 @@ export default async function ExhibitionDetailPage({
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-5 h-5 text-indigo-600 shrink-0"
+                    className="w-5 h-5 text-red-600 hover:text-red-700 shrink-0"
                   >
                     <path
                       fillRule="evenodd"
@@ -60,7 +63,7 @@ export default async function ExhibitionDetailPage({
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-5 h-5 text-indigo-600 shrink-0"
+                    className="w-5 h-5 text-red-600 hover:text-red-700 shrink-0"
                   >
                     <path d="M12.75 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM7.5 15.75a.75.75 0 100-1.5 .75.75 0 000 1.5zM8.25 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM9.75 15.75a.75.75 0 100-1.5 .75.75 0 000 1.5zM10.5 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12 15.75a.75.75 0 100-1.5 .75.75 0 000 1.5zM12.75 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM14.25 15.75a.75.75 0 100-1.5 .75.75 0 000 1.5zM15 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 15.75a.75.75 0 100-1.5 .75.75 0 000 1.5zM15 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 13.5a.75.75 0 100-1.5 .75.75 0 000 1.5z" />
                     <path
@@ -132,7 +135,7 @@ export default async function ExhibitionDetailPage({
                   href={`/user/exhibition/${params.eid}/booking`}
                   className="flex-2 order-1 sm:order-2"
                 >
-                  <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold py-4 px-6 rounded-xl transition duration-300 ease-in-out flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                  <button className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 px-6 rounded-xl transition duration-300 ease-in-out flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -156,6 +159,7 @@ export default async function ExhibitionDetailPage({
           </div>
         </div>
       </div>
+    </div>
     </main>
   );
 }
