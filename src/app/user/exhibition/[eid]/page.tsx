@@ -113,7 +113,7 @@ export default async function ExhibitionDetailPage({
                     href="/user/exhibition"
                     className="flex-1 order-2 sm:order-1"
                   >
-                    <button className="w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border-2 border-gray-200 transition duration-300 ease-in-out flex items-center justify-center gap-2">
+                    <button className="cursor-pointer w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border-2 border-gray-200 transition duration-300 ease-in-out flex items-center justify-center gap-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -135,7 +135,7 @@ export default async function ExhibitionDetailPage({
                     href={`/user/exhibition/${params.eid}/booking`}
                     className="flex-2 order-1 sm:order-2"
                   >
-                    <button className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 px-6 rounded-xl transition duration-300 ease-in-out flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                    <button className="cursor-pointer w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 px-6 rounded-xl transition duration-300 ease-in-out flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

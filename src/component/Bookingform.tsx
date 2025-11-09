@@ -1,57 +1,43 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
 export default function BookingForm({
+  session,
   exhibitionId,
   eventName,
   eventStartDate,
-  eventEndDate,
+  eventDurationDays,
   availableSmall,
   availableBig,
 }: {
+  session: Session | null;
   exhibitionId: string;
   eventName: string;
   eventStartDate: string;
-  eventEndDate: string;
+  eventDurationDays: number;
   availableSmall: number;
   availableBig: number;
 }) {
+  const router = useRouter();
   const [smallCount, setSmallCount] = useState(0);
   const [bigCount, setBigCount] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
   const MAX_TOTAL = 6;
-
   const [bookingPeriod, setBookingPeriod] = useState({
     startDate: "",
-    endDate: "",
   });
-
-  const [contactInfo, setContactInfo] = useState({
-    fullName: "",
-    companyName: "",
-    email: "",
-    phone: "",
-  });
-
   const totalCount = smallCount + bigCount;
-  const isAtMax = totalCount === MAX_TOTAL;
+  const isAtMax = totalCount >= MAX_TOTAL;
   const isAtMinSmall = smallCount === 0;
   const isAtMinBig = bigCount === 0;
 
-  const isAtMaxSmallAvailable = smallCount === availableSmall;
-  const isAtMaxBigAvailable = bigCount === availableBig;
+  const isAtMaxSmallAvailable = smallCount >= availableSmall;
+  const isAtMaxBigAvailable = bigCount >= availableBig;
 
   const isSubmitDisabled =
-    totalCount === 0 || !bookingPeriod.startDate || !bookingPeriod.endDate;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setContactInfo((prevInfo) => ({
-      ...prevInfo,
-      [name]: value,
-    }));
-  };
+    totalCount === 0 || !bookingPeriod.startDate || isLoading;
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,43 +59,99 @@ export default function BookingForm({
   const handleBigMinus = () => {
     if (!isAtMinBig) setBigCount((prev) => prev - 1);
   };
+  const calculateMaxEndDate = (startDateString: string, duration: number) => {
+    if (!startDateString || duration <= 0) return "";
+    const startDate = new Date(startDateString);
+    startDate.setDate(startDate.getDate() + eventDurationDays - 1);
+    return startDate.toISOString().slice(0, 10);
+  };
+  const safeEndDate = calculateMaxEndDate(eventStartDate, eventDurationDays);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (bookingPeriod.startDate < eventStartDate.slice(0, 10)) {
-      alert(`Start Date ต้องไม่ก่อนวันที่ ${eventStartDate.slice(0, 10)}`);
+    const safeStartDate = eventStartDate ? eventStartDate.slice(0, 10) : "";
+
+    if (safeStartDate && bookingPeriod.startDate < safeStartDate) {
+      alert(`วันเริ่มจองต้องไม่ก่อนวันเริ่มงาน (${safeStartDate})`);
       return;
     }
-    if (bookingPeriod.endDate > eventEndDate.slice(0, 10)) {
-      alert(`End Date ต้องไม่เกินวันที่ ${eventEndDate.slice(0, 10)}`);
-      return;
-    }
-    if (bookingPeriod.endDate < bookingPeriod.startDate) {
-      alert("End Date cannot be earlier than Start Date!");
-      return;
-    }
-    if (smallCount > availableSmall) {
-      alert(`คุณจอง Small Booths ได้สูงสุด ${availableSmall} บูธ`);
-      return;
-    }
-    if (bigCount > availableBig) {
-      alert(`คุณจอง Big Booths ได้สูงสุด ${availableBig} บูธ`);
-      return;
+    setIsLoading(true);
+
+    const token = session?.user.token as string | null;
+
+    const API_URL = "http://localhost:5000/api/v1/booking";
+
+    const apiCalls = [];
+
+    if (smallCount > 0) {
+      apiCalls.push(
+        fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            exhibition: exhibitionId,
+            boothType: "small",
+            amount: smallCount,
+          }),
+        }).then(async (res) => {
+          if (!res.ok) {
+            const errorData = await res.json();
+            console.error("API Error Detail (Small):", errorData);
+            throw new Error(
+              errorData.error ||
+                errorData.message ||
+                "Failed to book Small booth"
+            );
+          }
+          return res.json();
+        })
+      );
     }
 
-    const bookingData = {
-      ...contactInfo,
-      ...bookingPeriod,
-      smallBooths: smallCount,
-      bigBooths: bigCount,
-      totalBooths: totalCount,
-      exhibitionId: exhibitionId,
-    };
-    console.log("Sending Booking Data:", bookingData);
-    alert(
-      `Booking confirmed for ${eventName}\nPeriod: ${bookingPeriod.startDate} to ${bookingPeriod.endDate}\nTotal Booths: ${totalCount}`
-    );
+    if (bigCount > 0) {
+      apiCalls.push(
+        fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            exhibition: exhibitionId,
+            boothType: "big",
+            amount: bigCount,
+          }),
+        }).then(async (res) => {
+          if (!res.ok) {
+            const errorData = await res.json();
+            console.error("API Error Detail (Big):", errorData);
+            throw new Error(
+              errorData.error || errorData.message || "Failed to book Big booth"
+            );
+          }
+          return res.json();
+        })
+      );
+    }
+
+    try {
+      await Promise.all(apiCalls);
+
+      alert("✅ จองสำเร็จเรียบร้อย!");
+
+      setSmallCount(0);
+      setBigCount(0);
+      router.push(`/user/exhibition/${exhibitionId}/mybooking`);
+    } catch (error: any) {
+      console.error("Booking Error:", error);
+      alert(`เกิดข้อผิดพลาดในการจอง: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -131,20 +173,34 @@ export default function BookingForm({
                     {eventName}
                   </span>
                 </p>
+                <div className="mt-4 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-8 text-sm font-medium text-gray-700">
+                  <p>
+                    Event Start:{" "}
+                    <span className="text-red-600 font-semibold">
+                      {eventStartDate.slice(0, 10)}
+                    </span>
+                  </p>
+                  <p>
+                    Event End:{" "}
+                    <span className="text-red-600 font-semibold">
+                      {safeEndDate.slice(0, 10)}
+                    </span>
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-10">
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 border-t border-gray-200 pt-4 text-left">
-                    Booking Period
+                    Booking
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
                     <div>
                       <label
                         htmlFor="startDate"
                         className="block text-sm font-medium text-gray-700 mb-1 text-left"
                       >
-                        Start Date <span className="text-red-500">*</span>
+                        check in date <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="date"
@@ -152,184 +208,86 @@ export default function BookingForm({
                         name="startDate"
                         value={bookingPeriod.startDate}
                         onChange={handleDateChange}
-                        min={eventStartDate}
-                        max={eventEndDate}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="endDate"
-                        className="block text-sm font-medium text-gray-700 mb-1 text-left"
-                      >
-                        End Date <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="date"
-                        id="endDate"
-                        name="endDate"
-                        value={bookingPeriod.endDate}
-                        onChange={handleDateChange}
-                        min={bookingPeriod.startDate || eventStartDate}
-                        max={eventEndDate}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4 border-t border-gray-200 pt-4 text-left">
-                    Contact Information
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="fullName"
-                        className="block text-sm font-medium text-gray-700 mb-1 text-left"
-                      >
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="fullName"
-                        name="fullName"
-                        value={contactInfo.fullName}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        placeholder="John Doe"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="companyName"
-                        className="block text-sm font-medium text-gray-700 mb-1 text-left"
-                      >
-                        Company Name
-                      </label>
-                      <input
-                        type="text"
-                        id="companyName"
-                        name="companyName"
-                        value={contactInfo.companyName}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        placeholder="Tech Innovations Inc."
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mb-1 text-left"
-                      >
-                        Email <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={contactInfo.email}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        placeholder="you@example.com"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700 mb-1 text-left"
-                      >
-                        Phone <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={contactInfo.phone}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        placeholder="081-234-5678"
+                        min={eventStartDate ? eventStartDate.slice(0, 10) : ""}
+                        max={safeEndDate ? safeEndDate.slice(0, 10) : ""}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
                         required
                       />
                     </div>
                   </div>
                 </div>
               </div>
-              <div>
+
+              <div className="mt-10">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4 border-t border-gray-200 pt-4 text-left">
                   Select Your Booths
                 </h3>
 
                 <div className="space-y-5">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <span className="text-lg font-medium text-gray-800">
-                        Small Booth{" "}
+                      <span className="text-lg font-medium text-gray-800 block">
+                        Small Booth
                       </span>
                       <span className="text-sm text-gray-500">
                         (Available: {availableSmall})
                       </span>
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-3">
                       <button
                         type="button"
                         onClick={handleSmallMinus}
                         disabled={isAtMinSmall}
-                        className="w-10 h-10 rounded-full bg-gray-200 text-gray-700 text-2xl font-bold flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-300 text-gray-700 text-2xl flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 transition-colors"
                       >
                         -
                       </button>
-                      <span className="text-2xl font-bold text-gray-900 w-10 text-center">
+                      <span className="text-2xl font-bold text-gray-900 w-12 text-center">
                         {smallCount}
                       </span>
                       <button
                         type="button"
                         onClick={handleSmallPlus}
                         disabled={isAtMax || isAtMaxSmallAvailable}
-                        className="w-10 h-10 rounded-full bg-gray-200 text-gray-700 text-2xl font-bold flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-300 text-gray-700 text-2xl flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 transition-colors"
                       >
                         +
                       </button>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center">
+
+                  <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <span className="text-lg font-medium text-gray-800">
-                        Big Booth {}
+                      <span className="text-lg font-medium text-gray-800 block">
+                        Big Booth
                       </span>
                       <span className="text-sm text-gray-500">
                         (Available: {availableBig})
                       </span>
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-3">
                       <button
                         type="button"
                         onClick={handleBigMinus}
                         disabled={isAtMinBig}
-                        className="w-10 h-10 rounded-full bg-gray-200 text-gray-700 text-2xl font-bold flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-300 text-gray-700 text-2xl flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 transition-colors"
                       >
                         -
                       </button>
-                      <span className="text-2xl font-bold text-gray-900 w-10 text-center">
+                      <span className="text-2xl font-bold text-gray-900 w-12 text-center">
                         {bigCount}
                       </span>
                       <button
                         type="button"
                         onClick={handleBigPlus}
                         disabled={isAtMax || isAtMaxBigAvailable}
-                        className="w-10 h-10 rounded-full bg-gray-200 text-gray-700 text-2xl font-bold flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-300 text-gray-700 text-2xl flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 transition-colors"
                       >
                         +
                       </button>
                     </div>
                   </div>
+
                   <div className="border-t border-gray-200 pt-5 flex justify-between items-center">
                     <span className="text-xl font-bold text-gray-900">
                       Total Booths:
@@ -338,40 +296,72 @@ export default function BookingForm({
                       {totalCount}
                     </span>
                   </div>
-                  {isAtMax && (
-                    <p className="text-center text-red-600 font-medium">
-                      Max limit (6) reached.
-                    </p>
-                  )}
-                  {isAtMaxSmallAvailable && !isAtMax && smallCount > 0 && (
-                    <p className="text-center text-red-600 font-medium">
-                      All available small booths selected.
-                    </p>
-                  )}
-                  {isAtMaxBigAvailable && !isAtMax && bigCount > 0 && (
-                    <p className="text-center text-red-600 font-medium">
-                      All available big booths selected.
-                    </p>
+
+                  {(isAtMax ||
+                    (isAtMaxSmallAvailable && smallCount > 0) ||
+                    (isAtMaxBigAvailable && bigCount > 0)) && (
+                    <div className="text-center p-2 bg-yellow-50 text-yellow-800 rounded-md text-sm font-medium">
+                      {isAtMax && "⚠️ Maximum limit of 6 booths reached."}
+                      {!isAtMax &&
+                        isAtMaxSmallAvailable &&
+                        smallCount > 0 &&
+                        "⚠️ All available Small booths selected."}
+                      {!isAtMax &&
+                        isAtMaxBigAvailable &&
+                        bigCount > 0 &&
+                        "⚠️ All available Big booths selected."}
+                    </div>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-50 px-8 py-6">
+            <div className="bg-gray-50 px-8 py-6 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={isSubmitDisabled}
-                className="w-full bg-red-600 text-white text-lg font-bold py-4 px-6 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className={`w-full text-white text-lg font-bold py-4 px-6 rounded-lg shadow-md transition-all 
+                  ${
+                    isSubmitDisabled
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-red-600 hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  } flex items-center justify-center`}
               >
-                Confirm Booking
+                {isLoading ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Processing...
+                  </>
+                ) : (
+                  "Confirm Booking"
+                )}
               </button>
               <p className="text-center mt-4">
-                <Link
-                  href="/user/exhibition"
-                  className="text-sm font-medium text-gray-600 hover:text-gray-900 cursor-pointer"
+                <a
+                  href={`/user/exhibition/`}
+                  className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Cancel
-                </Link>
+                </a>
               </p>
             </div>
           </form>
