@@ -26,9 +26,6 @@ export default async function BookingPage({ params }: Props) {
       <BookingForm
         session={session}
         exhibitionId={exhibition.data.id}
-        eventName={exhibition.data.name}
-        eventStartDate={exhibition.data.startDate}
-        eventDurationDays={exhibition.data.durationDay}
         availableSmall={exhibition.data.smallBoothQuota}
         availableBig={exhibition.data.bigBoothQuota}
       />
