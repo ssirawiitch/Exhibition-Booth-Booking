@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Calendar, Eye, EyeOff } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
@@ -70,26 +70,26 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-gray-700">Password</label>
-                <button type="button" className="text-sm text-red-600 hover:text-red-700 font-medium">
+                {/* <button type="button" className="text-sm text-red-600 hover:text-red-700 font-medium">
                   Forgot Password?
-                </button>
+                </button> */}
               </div>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   placeholder="••••••••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all pr-12"
                   required
                 />
-                <button
+                {/* <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+                  {/* {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />} `
+                </button> */}
               </div>
             </div>
 

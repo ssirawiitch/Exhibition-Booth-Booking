@@ -59,7 +59,7 @@ export default function Card({
             <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{name}</h3>
                 
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
+                {/* <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p> */}
             
             <div className="space-y-3 mb-4">
                 <div className="flex items-start space-x-2 text-gray-600">
@@ -67,17 +67,17 @@ export default function Card({
                     <span className="text-sm">{venue}</span>
                 </div>
                 
-                <div className="flex items-center space-x-2 text-gray-600">
+                {/* <div className="flex items-center space-x-2 text-gray-600"> 
                     <Calendar className="w-5 h-5 text-red-600 flex-shrink-0" />
                     <span className="text-sm">
                         {formatStartDate(startDate)} - {calculateEndDate(startDate, durationDay)}
                     </span>
-                </div>
+                </div> */}
                 
-                <div className="flex items-center space-x-2 text-gray-600">
+                {/* <div className="flex items-center space-x-2 text-gray-600">
                     <Square className="w-5 h-5 text-red-600 flex-shrink-0" />
                     <span className="text-sm">Duration: {durationDay} day{durationDay > 1 ? 's' : ''}</span>
-                </div>
+                </div> */}
                 
                 <div className="flex items-center space-x-2 text-gray-600">
                     <Users className="w-5 h-5 text-red-600 flex-shrink-0" />
