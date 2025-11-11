@@ -124,7 +124,7 @@ export default function BookingForm({
 
       setSmallCount(0);
       setBigCount(0);
-      router.push(`/user/exhibition/${exhibitionId}/mybooking`);
+      router.push(`/user/mybooking`);
     } catch (error: any) {
       console.error("Booking Error:", error);
       alert(`เกิดข้อผิดพลาดในการจอง: ${error.message}`);
