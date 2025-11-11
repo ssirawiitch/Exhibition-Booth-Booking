@@ -3,6 +3,7 @@ import Header from "@/component/Header";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import getBookings from "@/libs/getBooking";
+import editBooking from "@/libs/editBooking";
 import deleteBooking from "@/libs/deleteBooking";
 import { Trash2, Edit, MapPin, Calendar, Eye } from "lucide-react";
 import Link from "next/link";
@@ -184,9 +185,11 @@ export default function MyBookingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <Header />
-        <div className="text-center">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+        <div className="grow flex flex-row justify-center">
+          <Header />
+        </div>
+        <div className="text-center grow flex flex-col items-center ">
           <svg
             className="animate-spin -ml-1 mr-3 h-10 w-10 text-red-600"
             xmlns="http://www.w3.org/2000/svg"
@@ -217,20 +220,24 @@ export default function MyBookingPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <Header />
-        <div className="text-center p-8 bg-white rounded-lg shadow-xl">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-red-600 mb-3">
-            Error Loading Bookings
-          </h2>
-          <p className="text-gray-700 mb-6">{error}</p>
-          <button
-            onClick={fetchBookings}
-            className="bg-red-600 text-white px-6 py-2 rounded-full font-medium hover:bg-red-700 transition"
-          >
-            Try Again
-          </button>
+      <div className=" bg-gray-50 flex flex-col items-center">
+        <div className="top-0 flex justify-center">
+          <Header />
+        </div>
+        <div className="mt-75 pb-70">
+          <div className=" p-8 bg-white rounded-lg shadow-xl">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-red-600 mb-3">
+              Error Loading Bookings
+            </h2>
+            <p className="text-gray-700 mb-6">{error}</p>
+            <button
+              onClick={fetchBookings}
+              className="cursor-pointer bg-red-600 text-white px-6 py-2 rounded-full font-medium hover:bg-red-700 transition"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
