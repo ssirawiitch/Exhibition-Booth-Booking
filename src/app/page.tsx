@@ -42,14 +42,14 @@ export default async function HomePage() {
                   href="/user/signup"
                   className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl"
                 >
-                  Start Booking Now
+                  sign up
                 </Link>
               ) : userRole === "admin" ? (
                 <Link
                   href="/admin/home"
                   className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl"
                 >
-                  Manage Here
+                  Manage Exhibitions
                 </Link>
               ) : (
                 <Link
@@ -59,12 +59,22 @@ export default async function HomePage() {
                   Start Booking Now
                 </Link>
               )}
-              <Link
-                className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all"
-                href="/demo"
-              >
-                Watch Demo
-              </Link>
+
+              {
+                session && userRole === "admin" ? 
+                <Link
+                  className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all"
+                  href="/admin/manageBooking"
+                >
+                  Manage Bookings
+                </Link> :
+                <Link
+                  className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all"
+                  href="/demo"
+                >
+                  Watch Demo
+                </Link>
+              }
             </div>
 
             {session ? (
