@@ -1,6 +1,5 @@
 import getExhibition from "@/libs/getExhibition";
 import Image from "next/image";
-import Link from "next/link";
 import Header from "@/component/Header";
 import BookingForm from "@/component/Bookingform";
 import { getServerSession } from "next-auth";
@@ -9,10 +8,11 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 export default async function ExhibitionDetailPage({
   params,
 }: {
-  params: { eid: string };
+  params: Promise<{ eid: string }>;
 }) {
   const session = await getServerSession(authOptions);
-  const exhibitionRequest = await getExhibition(params.eid);
+  const { eid } = await params; 
+  const exhibitionRequest = await getExhibition(eid);
   const exhibition = exhibitionRequest.data;
 
   const options: Intl.DateTimeFormatOptions = {
