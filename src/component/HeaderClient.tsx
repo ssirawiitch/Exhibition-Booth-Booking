@@ -51,7 +51,12 @@ export default function HeaderClient() {
                 href="/admin/manageBooking"
               >
                 <div className="text-red-600 hover:text-red-700 font-medium transition-colors mr-8">Manage Bookings</div>
-              </Link> : <div></div>
+              </Link> : 
+              <Link
+                href="/user/profile"
+              >
+                <div className="text-red-600 hover:text-red-700 font-medium transition-colors mr-8">Edit Profile</div>
+              </Link>
             }
             <Link
               href={userRole === "admin" ? "/admin/home" : "/user/mybooking"}
