@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { X, Edit } from "lucide-react";
 
 import editBooking from "@/libs/editBooking";
-import deleteBooking from "@/libs/deleteBooking";
 import getExhibition from "@/libs/getExhibition";
 
 type Booking = {
@@ -93,7 +92,12 @@ export default function EditBookingModal({
       ? newAmount - booking.amount > relevantQuota
       : false;
 
-  const isDisabled = loading || isOverLimit || isQuotaExceeded;
+  const isDisabled =
+    loading ||
+    isOverLimit ||
+    isQuotaExceeded ||
+    newAmount - booking.amount === 0 ||
+    isZeroAmount;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,33 +107,15 @@ export default function EditBookingModal({
       return;
     }
 
-    if (isOverLimit) {
-      alert(
-        `Failed: Total Small Booths (${totalSmall}) + Big Booths (${totalBig}) must not exceed ${MAX_TOTAL_LIMIT} units.`
-      );
-      return;
-    }
-
-    if (isQuotaExceeded) {
-      alert(`Failed: Increasing can not exceed ${relevantQuota}.`);
-      return;
-    }
-
     setLoading(true);
 
     try {
-      if (isZeroAmount) {
-        await deleteBooking(token, booking._id);
-        alert("Booking successfully cancelled (Amount set to 0).");
-      } else {
-        const updatedData = {
-          boothType: booking.boothType,
-          amount: newAmount,
-        };
-        await editBooking(token, booking._id, updatedData);
-        alert("Booking updated successfully!");
-      }
-
+      const updatedData = {
+        boothType: booking.boothType,
+        amount: newAmount,
+      };
+      await editBooking(token, booking._id, updatedData);
+      alert("Booking updated successfully!");
       onSuccess();
     } catch (err: any) {
       console.error(err);
@@ -198,6 +184,12 @@ export default function EditBookingModal({
               </div>
             )}
 
+            {isZeroAmount && (
+              <div className="bg-red-100 p-3 rounded-lg border border-red-300 text-sm font-bold text-red-700">
+                ERROR: Total units can not equal 0.
+              </div>
+            )}
+
             {isQuotaExceeded && (
               <div className="bg-red-100 p-3 rounded-lg border border-red-300 text-sm font-bold text-red-700">
                 ERROR: Increasing can not exceed {relevantQuota}.
@@ -233,11 +225,7 @@ export default function EditBookingModal({
                 isDisabled ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
               }`}
             >
-              {loading
-                ? "Processing..."
-                : isZeroAmount
-                ? "Cancel Booking"
-                : "Save Changes"}
+              {loading ? "Processing..." : "Save Changes"}
             </button>
 
             <button
