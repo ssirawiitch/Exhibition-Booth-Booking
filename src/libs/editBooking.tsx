@@ -1,0 +1,25 @@
+export default async function editBooking(
+  token: string,
+  bookingId: string,
+  updatedData: any
+) {
+  const response = await fetch(
+    `http://localhost:5000/api/v1/booking/${bookingId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedData),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Failed to update booking. Server validation failed (e.g., max exhibition quota reached)."
+    );
+  }
+
+  return await response.json();
+}

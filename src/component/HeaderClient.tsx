@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Calendar } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import Link from "next/link";
+import { Calendar } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function HeaderClient() {
   const { data: session } = useSession();
-  const [userRole, setUserRole] = useState<string>('');
+  const [userRole, setUserRole] = useState<string>("");
 
   useEffect(() => {
     async function fetchData() {
       if (session?.user?.token) {
         try {
-          const response = await fetch('http://localhost:5000/api/v1/auth/me', {
+          const response = await fetch("http://localhost:5000/api/v1/auth/me", {
             method: "GET",
             headers: {
-              authorization: `Bearer ${session.user.token}`
-            }
+              authorization: `Bearer ${session.user.token}`,
+            },
           });
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
           const result = await response.json();
           setUserRole(result.data.role);
@@ -31,7 +31,7 @@ export default function HeaderClient() {
     }
     fetchData();
   }, [session]);
-  
+
   return (
     <nav className="bg-white shadow-sm fixed w-full z-10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -46,9 +46,11 @@ export default function HeaderClient() {
         {/* Menu */}
         {session ? (
           <div className="flex items-center">
-            <Link href={userRole === 'admin' ? '/admin/home' : ''}>
+            <Link
+              href={userRole === "admin" ? "/admin/home" : "/user/mybooking"}
+            >
               <div className="text-red-600 hover:text-red-700 font-medium transition-colors">
-                {userRole === 'admin' ? 'Manage' : 'My Booking'}
+                {userRole === "admin" ? "Manage" : "My Booking"}
               </div>
             </Link>
             <Link href="/api/auth/signout">
