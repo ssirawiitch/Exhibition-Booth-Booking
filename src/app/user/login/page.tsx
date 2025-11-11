@@ -23,6 +23,17 @@ export default function LoginPage() {
     console.log(result);
   };
 
+  // auto-fill
+  const fillUser = () => {
+    setEmail("sirawitchwill@gmail.com");
+    setPassword("@S1wi+cHwill");
+  };
+
+  const fillAdmin = () => {
+    setEmail("admin@book.com");
+    setPassword("@Dm1Nbooking");
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-red-50 via-white to-red-50 flex items-center justify-center p-6">
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -119,9 +130,26 @@ export default function LoginPage() {
             >
               Login
             </button>
+
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={fillUser}
+                className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl hover:bg-gray-50 transition-all"
+              >
+                Autofill User
+              </button>
+              <button
+                type="button"
+                onClick={fillAdmin}
+                className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl hover:bg-gray-50 transition-all"
+              >
+                Autofill Admin
+              </button>
+            </div>
           </form>
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
@@ -154,7 +182,7 @@ export default function LoginPage() {
               </svg>
               Continue with Google
             </button>
-          </div>
+          </div> */}
 
           <div className="mt-8 text-center">
             <span className="text-gray-600">Don't have an account? </span>
