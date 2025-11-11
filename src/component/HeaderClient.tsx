@@ -46,11 +46,18 @@ export default function HeaderClient() {
         {/* Menu */}
         {session ? (
           <div className="flex items-center">
+            {userRole == "admin" ? 
+              <Link
+                href="/admin/manageBooking"
+              >
+                <div className="text-red-600 hover:text-red-700 font-medium transition-colors mr-8">Manage Bookings</div>
+              </Link> : <div></div>
+            }
             <Link
               href={userRole === "admin" ? "/admin/home" : "/user/mybooking"}
             >
               <div className="text-red-600 hover:text-red-700 font-medium transition-colors">
-                {userRole === "admin" ? "Manage" : "My Booking"}
+                {userRole === "admin" ? "Manage Exhibitions" : "My Booking"}
               </div>
             </Link>
             <Link href="/api/auth/signout">

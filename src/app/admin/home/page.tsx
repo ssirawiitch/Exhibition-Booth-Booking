@@ -10,6 +10,7 @@ import AddExhibitionModal from '@/component/AddExhibitionModal';
 import deleteExhibition from '@/libs/deleteExhibition'
 import { useSession } from 'next-auth/react';
 import EditExhibitionModal from '@/component/EditExhibitionModal';
+import AdminSearchFilterBar from '@/component/AdminSearchFilterBar';
 
 type Exhibition = {
   _id: string;
@@ -38,6 +39,12 @@ export default function AdminHomePage() {
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [selectedExhibition, setSelectedExhibition] = useState<Exhibition | null>(null);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [venueFilter, setVenueFilter] = useState('all');
+  const [sortBy, setSortBy] = useState<'none' | 'date' | 'duration' | 'booth'>('none');
+  const [sortAsc, setSortAsc] = useState(true);
+
 
   // โหลดข้อมูลเมื่อเปิดหน้า
   useEffect(() => {
@@ -81,6 +88,45 @@ export default function AdminHomePage() {
     }
   }
 
+  // กรอง + เรียงข้อมูลตาม search/filter/sort
+const filteredExhibitions = React.useMemo(() => {
+  let result = [...exhibitions];
+
+  // 1. Filter by search term
+  if (searchTerm.trim() !== '') {
+    result = result.filter((ex) =>
+      ex.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  // 2. Filter by venue
+  if (venueFilter !== 'all') {
+    result = result.filter((ex) => ex.venue === venueFilter);
+  }
+
+  // 3. Sort
+  if (sortBy !== 'none') {
+      result.sort((a, b) => {
+        let valueA = 0,
+          valueB = 0;
+
+        if (sortBy === 'date') {
+          valueA = new Date(a.startDate).getTime();
+          valueB = new Date(b.startDate).getTime();
+        } else if (sortBy === 'duration') {
+          valueA = a.durationDay;
+          valueB = b.durationDay;
+        } else if (sortBy === 'booth') {
+          valueA = a.smallBoothQuota + a.bigBoothQuota;
+          valueB = b.smallBoothQuota + b.bigBoothQuota;
+        }
+
+        return sortAsc ? valueA - valueB : valueB - valueA;
+      });
+    }
+    return result;
+  }, [exhibitions, searchTerm, venueFilter, sortBy, sortAsc]);
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -115,6 +161,19 @@ export default function AdminHomePage() {
       <div className="max-w-7xl mx-auto px-6 pt-8 pb-20">
         <StatAdminSection exhibitions={exhibitions} />
 
+        <AdminSearchFilterBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          venueFilter={venueFilter}
+          setVenueFilter={setVenueFilter}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          sortAsc={sortAsc}
+          setSortAsc={setSortAsc}
+          venues={[...new Set(exhibitions.map((ex) => ex.venue))]}
+        />
+
+
         {/* Exhibitions Table */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
@@ -131,7 +190,7 @@ export default function AdminHomePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {exhibitions.map((ex, i) => (
+                {filteredExhibitions.map((ex, i) => (
                   <tr key={ex._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm text-gray-900 font-medium">#{i + 1}</td>
                     <td className="px-6 py-4">
@@ -178,6 +237,13 @@ export default function AdminHomePage() {
                     </td>
                   </tr>
                 ))}
+                 {filteredExhibitions.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center py-6 text-gray-500">
+                        No exhibitions found.
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           </div>
