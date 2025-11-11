@@ -1,10 +1,10 @@
 // component/EditExhibitionModal.tsx
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { X, Calendar as CalendarIcon } from 'lucide-react';
-import editExhibition from '@/libs/editExhibition';
-import Image from 'next/image';
+import React, { useState } from "react";
+import { X, Calendar as CalendarIcon } from "lucide-react";
+import editExhibition from "@/libs/editExhibition";
+import Image from "next/image";
 
 export default function EditExhibitionModal({
   exhibition,
@@ -21,7 +21,7 @@ export default function EditExhibitionModal({
     name: exhibition.name,
     description: exhibition.description,
     venue: exhibition.venue,
-    startDate: exhibition.startDate.split('T')[0],
+    startDate: exhibition.startDate.split("T")[0],
     durationDay: exhibition.durationDay,
     smallBoothQuota: exhibition.smallBoothQuota,
     bigBoothQuota: exhibition.bigBoothQuota,
@@ -32,18 +32,20 @@ export default function EditExhibitionModal({
 
   const getTodayDate = () => {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    return today.toISOString().split("T")[0];
   };
 
   const calculateEndDate = (startDate: string, durationDays: number) => {
-    if (!startDate || !durationDays) return '';
+    if (!startDate || !durationDays) return "";
     const start = new Date(startDate);
     const end = new Date(start);
     end.setDate(end.getDate() + durationDays - 1);
     return end.toLocaleDateString();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -53,19 +55,19 @@ export default function EditExhibitionModal({
 
     // Validate start date is not in the past
     if (formData.startDate && formData.startDate < getTodayDate()) {
-      alert('Start date cannot be in the past!');
+      alert("Start date cannot be in the past!");
       return;
     }
 
     setLoading(true);
     try {
       await editExhibition(token, exhibition._id, formData);
-      alert('Exhibition updated successfully!');
+      alert("Exhibition updated successfully!");
       onSuccess();
       onClose();
     } catch (err) {
       console.error(err);
-      alert('Failed to update exhibition');
+      alert("Failed to update exhibition");
     } finally {
       setLoading(false);
     }
@@ -174,7 +176,11 @@ export default function EditExhibitionModal({
                 <div className="flex items-center space-x-2 text-sm text-blue-900">
                   <CalendarIcon className="w-4 h-4" />
                   <span>
-                    <strong>End Date:</strong> {calculateEndDate(formData.startDate, Number(formData.durationDay))}
+                    <strong>End Date:</strong>{" "}
+                    {calculateEndDate(
+                      formData.startDate,
+                      Number(formData.durationDay)
+                    )}
                   </span>
                 </div>
               </div>
@@ -243,11 +249,12 @@ export default function EditExhibitionModal({
                 <Image
                   src={formData.posterPicture}
                   alt="Poster preview"
-                  width={800} 
+                  width={800}
                   height={400}
                   className="w-full h-48 object-cover rounded-xl border border-gray-200"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL';
+                    (e.target as HTMLImageElement).src =
+                      "https://via.placeholder.com/400x300?text=Invalid+Image+URL";
                   }}
                 />
               </div>
@@ -261,7 +268,7 @@ export default function EditExhibitionModal({
               disabled={loading}
               className="flex-1 bg-red-600 text-white py-3 rounded-xl font-medium hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Saving...' : 'Save Changes'}
+              {loading ? "Saving..." : "Save Changes"}
             </button>
             <button
               type="button"
