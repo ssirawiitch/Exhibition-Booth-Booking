@@ -129,7 +129,7 @@ export default function HeaderClient() {
             <div className="flex items-center space-x-6">
               <Link
                 href="/user/login"
-                className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                className="text-gray-900 font-bold hover:text-red-700  transition-colors"
               >
                 Login
               </Link>
