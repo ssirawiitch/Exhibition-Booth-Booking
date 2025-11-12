@@ -104,7 +104,7 @@ export default function HeaderClient() {
                         <span>Edit Profile</span>
                       </Link>
                       <Link
-                        href="#"
+                        href="/contact"
                         onClick={() => setIsMenuOpen(false)}
                         className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
