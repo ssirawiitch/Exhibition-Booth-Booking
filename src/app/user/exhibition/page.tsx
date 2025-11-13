@@ -7,6 +7,10 @@ import getExhibitions from "@/libs/getExhibitions";
 import { Suspense } from "react";
 import { LinearProgress } from "@mui/material";
 import ExhibitionCardSection from "@/component/ExhibitionCardSection";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import getUserProfile from "@/libs/getUserProfile";
+import { redirect } from "next/navigation";
 
 // Updated mock data matching the new schema
 const availableBooths = [
@@ -90,24 +94,19 @@ const availableBooths = [
   },
 ];
 
-export default function ExhibitionPage() {
+export default async function ExhibitionPage() {
+
   const exhibits = getExhibitions();
 
-  // const [searchTerm, setSearchTerm] = useState('');
-  // const [selectedType, setSelectedType] = useState('All');
-
-  // const types = ['All', 'Technology', 'Food & Beverage', 'Automotive', 'Fashion', 'Healthcare', 'Education'];
-
-  // const filteredBooths = availableBooths.filter(booth => {
-  //   const matchesSearch = booth.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //                        booth.venue.toLowerCase().includes(searchTerm.toLowerCase());
-  //   const matchesType = selectedType === 'All' || booth.type === selectedType;
-  //   return matchesSearch && matchesType;
-  // });
-
-  // const totalSmallBooths = availableBooths.reduce((sum, booth) => sum + booth.smallBoothQuota, 0);
-  // const totalBigBooths = availableBooths.reduce((sum, booth) => sum + booth.bigBoothQuota, 0);
-  // const totalBooths = totalSmallBooths + totalBigBooths;
+  const session = await getServerSession(authOptions);
+  let userDetail = null;
+  if (session?.user?.token) {
+    userDetail = await getUserProfile(session.user.token as string);
+  }
+  const userRole = userDetail?.data?.role;
+  if (userRole !== 'member') {
+    redirect("/user/login");
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
