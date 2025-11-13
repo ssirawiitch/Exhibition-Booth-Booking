@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { Calendar, User, Mail, Phone, Shield, ArrowLeft } from 'lucide-react';
+import React from "react";
+import Link from "next/link";
+import { Calendar, User, Mail, Phone, Shield, ArrowLeft } from "lucide-react";
+import HeaderClient from "./HeaderClient";
 
 interface UserProfile {
   name: string;
@@ -18,35 +19,26 @@ interface ViewProfileProps {
 
 export default function ViewProfile({ user }: ViewProfileProps) {
   const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-red-600 to-red-700 py-5">
-        <div className="flex justify-between max-w-4xl mx-auto px-6">
-          <div>
-          <h1 className="text-4xl font-bold text-white mb-2">My Profile</h1>
-          <p className="text-red-100 mb-2">View your personal information</p>
+      <HeaderClient />
+      <div className="bg-gradient-to-r from-red-600 to-red-700 pt-30 pb-10">
+        <div className="flex flex-col items-center max-w-4xl mx-auto px-6">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-white mb-2">My Profile</h1>
+            <p className="text-red-100 mb-2">View your personal information</p>
           </div>
-          <Link
-            href="/"
-            className="inline-flex items-center space-x-2 text-red-100 hover:text-white mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Home</span>
-          </Link>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Sidebar - User Info Card */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-6">
               <div className="text-center mb-6">
@@ -85,9 +77,19 @@ export default function ViewProfile({ user }: ViewProfileProps) {
                 </p>
               </div>
             </div>
+            <div className="flex justify-center items-center  ">
+              <Link
+                href="/"
+                className="w-30 h-12 inline-flex items-center space-x-2 bg-white border border-gray-300 rounded-xl px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors mt-8"
+              >
+                <ArrowLeft className="w-5 h-5 text-gray-500" />
+                <span className="flex justify-center items-center">
+                  <span>Back</span>
+                </span>
+              </Link>
+            </div>
           </div>
 
-          {/* Right Side - Info Display */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -95,7 +97,6 @@ export default function ViewProfile({ user }: ViewProfileProps) {
               </h2>
 
               <div className="space-y-6">
-                {/* Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name
@@ -111,7 +112,6 @@ export default function ViewProfile({ user }: ViewProfileProps) {
                   </div>
                 </div>
 
-                {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address
@@ -127,7 +127,6 @@ export default function ViewProfile({ user }: ViewProfileProps) {
                   </div>
                 </div>
 
-                {/* Phone */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Phone Number
@@ -145,10 +144,11 @@ export default function ViewProfile({ user }: ViewProfileProps) {
               </div>
             </div>
 
-            {/* Info Cards */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                <h4 className="font-semibold text-blue-900 mb-1">Security Tip</h4>
+                <h4 className="font-semibold text-blue-900 mb-1">
+                  Security Tip
+                </h4>
                 <p className="text-sm text-blue-700">
                   Protect your account by keeping your credentials private.
                 </p>

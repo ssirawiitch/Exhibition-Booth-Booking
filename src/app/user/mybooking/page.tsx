@@ -424,7 +424,7 @@ export default function MyBookingPage() {
             regarding your bookings.
           </p>
           <a
-            href="#"
+            href="/contact"
             className="inline-block bg-white text-red-700 px-8 py-3 rounded-full font-bold uppercase tracking-wide shadow-lg hover:bg-red-50 transition duration-300 transform hover:scale-105"
           >
             Contact Support Now
