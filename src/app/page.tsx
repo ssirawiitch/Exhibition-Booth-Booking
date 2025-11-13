@@ -23,10 +23,7 @@ export default async function HomePage() {
       <div className="max-w-7xl mx-auto px-6 pt-20 pb-32 pt-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mt-12">
           <div>
-            <div className="inline-block bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              🎉 Book Your Exhibition Space Today
-            </div>
-            <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight mt-10">
               Seamless Booth Booking for Your Next
               <span className="text-red-600"> Exhibition</span>
             </h1>
@@ -60,21 +57,21 @@ export default async function HomePage() {
                 </Link>
               )}
 
-              {
-                session && userRole === "admin" ? 
+              {session && userRole === "admin" ? (
                 <Link
                   className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all"
                   href="/admin/manageBooking"
                 >
                   Manage Bookings
-                </Link> :
+                </Link>
+              ) : (
                 <Link
                   className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:border-red-600 hover:text-red-600 transition-all"
                   href="/demo"
                 >
                   Watch Demo
                 </Link>
-              }
+              )}
             </div>
 
             {session ? (

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
+import { createBooking } from "../libs/createBooking";
 
 export default function BookingForm({
   session,
@@ -59,67 +60,13 @@ export default function BookingForm({
 
     const token = session?.user.token as string | null;
 
-    const API_URL = "http://localhost:5000/api/v1/booking";
-
-    const apiCalls = [];
-
-    if (smallCount > 0) {
-      apiCalls.push(
-        fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            exhibition: exhibitionId,
-            boothType: "small",
-            amount: smallCount,
-          }),
-        }).then(async (res) => {
-          if (!res.ok) {
-            const errorData = await res.json();
-            console.error("API Error Detail (Small):", errorData);
-            throw new Error(
-              errorData.error ||
-                errorData.message ||
-                "Failed to book Small booth"
-            );
-          }
-          return res.json();
-        })
-      );
-    }
-
-    if (bigCount > 0) {
-      apiCalls.push(
-        fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            exhibition: exhibitionId,
-            boothType: "big",
-            amount: bigCount,
-          }),
-        }).then(async (res) => {
-          if (!res.ok) {
-            const errorData = await res.json();
-            console.error("API Error Detail (Big):", errorData);
-            throw new Error(
-              errorData.error || errorData.message || "Failed to book Big booth"
-            );
-          }
-          return res.json();
-        })
-      );
-    }
-
     try {
-      await Promise.all(apiCalls);
-
+      await createBooking({
+        smallCount,
+        bigCount,
+        exhibitionId,
+        token,
+      });
       alert("✅ จองสำเร็จเรียบร้อย!");
 
       setSmallCount(0);

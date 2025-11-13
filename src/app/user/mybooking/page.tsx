@@ -3,7 +3,6 @@ import Header from "@/component/Header";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import getBookings from "@/libs/getBooking";
-import editBooking from "@/libs/editBooking";
 import deleteBooking from "@/libs/deleteBooking";
 import { Trash2, Edit, MapPin, Calendar, Eye } from "lucide-react";
 import Link from "next/link";
@@ -133,7 +132,44 @@ export default function MyBookingPage() {
       for (const bookingId of group.bookingIds) {
         await deleteBooking(token, bookingId);
       }
+      const BOOKED_EXHIBITIONS_KEY = "bookedExhibitionIds";
 
+      const exhibitionIdToClear = group.exhibitionId;
+
+      if (!exhibitionIdToClear) {
+        console.error(
+          "Could not clear localStorage flag: 'exhibitionId' is missing from group object."
+        );
+      } else if (typeof window !== "undefined" && window.localStorage) {
+        console.log(
+          `Attempting to clear localStorage flag for: ${exhibitionIdToClear}`
+        );
+        try {
+          const storedData = window.localStorage.getItem(
+            BOOKED_EXHIBITIONS_KEY
+          );
+          if (storedData) {
+            const bookedIds: string[] = JSON.parse(storedData);
+
+            const newBookedIds = bookedIds.filter(
+              (id) => id !== exhibitionIdToClear
+            );
+
+            window.localStorage.setItem(
+              BOOKED_EXHIBITIONS_KEY,
+              JSON.stringify(newBookedIds)
+            );
+            console.log(
+              `localStorage flag for ${exhibitionIdToClear} cleared.`
+            );
+          }
+        } catch (localErr) {
+          console.error(
+            "Error updating localStorage after deletion:",
+            localErr
+          );
+        }
+      }
       alert(
         `✅ Successfully cancelled all ${totalBookings} bookings for ${group.name}!`
       );
