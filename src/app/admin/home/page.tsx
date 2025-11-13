@@ -11,6 +11,7 @@ import deleteExhibition from '@/libs/deleteExhibition'
 import { useSession } from 'next-auth/react';
 import EditExhibitionModal from '@/component/EditExhibitionModal';
 import AdminSearchFilterBar from '@/component/AdminSearchFilterBar';
+import getUserProfile from '@/libs/getUserProfile';
 
 type Exhibition = {
   _id: string;
@@ -34,6 +35,27 @@ export default function AdminHomePage() {
 
   const {data:session} = useSession();
   const tokens = session?.user?.token as string | undefined;
+
+  useEffect(() => {
+    const checkRole = async () => {
+      if (!tokens) return; 
+
+      try {
+        const profile = await getUserProfile(tokens);
+
+        if (profile.role !== 'admin') {
+          // alert("Unauthorized: Only admin can access this page");
+          window.location.href = "/";
+        }
+      } catch (err) {
+        console.error("Error checking role:", err);
+        // alert("Unable to verify your role.");
+        window.location.href = "/";
+      }
+    };
+
+    checkRole();
+  }, [tokens]);
 
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [loading, setLoading] = useState(true);

@@ -9,6 +9,7 @@ import deleteBooking from "@/libs/deleteBooking";
 import AdminBookingSearchFilterBar from "@/component/AdminBookingSearchFilterBar";
 import EditBookingModal from "@/component/EditBookingModal";
 import getBookings from "@/libs/getBooking";
+import getUserProfile from "@/libs/getUserProfile";
 
 type Booking = {
   _id: string;
@@ -43,6 +44,27 @@ type BookingWithContext = Booking & { editContext: EditContext };
 export default function ManageBookingPage() {
   const { data: session, status } = useSession();
   const token = session?.user?.token;
+
+  useEffect(() => {
+    const checkRole = async () => {
+      if (!token) return; 
+
+      try {
+        const profile = await getUserProfile(token); 
+
+        if (profile.role !== 'admin') {
+          alert("Unauthorized: Only admin can access this page");
+          window.location.href = "/";
+        }
+      } catch (err) {
+        console.error("Error checking role:", err);
+        alert("Unable to verify your role.");
+        window.location.href = "/";
+      }
+    };
+
+    checkRole();
+  }, [token]);
 
   const [allBookings, setAllBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);

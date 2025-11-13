@@ -106,7 +106,7 @@ export default async function HomePage() {
       {session ? (
         <div className="bg-linear-to-br from-red-600 to-red-700 py-10">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <p className="m-5 text-white">By Will and Drew</p>
+            <p className="m-5 text-white">© 2025 Will &amp; Drew</p>
           </div>
         </div>
       ) : (
@@ -125,7 +125,7 @@ export default async function HomePage() {
             >
               Get Started for Free
             </Link>
-            <p className="m-5">By Will and Drew</p>
+            <p className="m-5">© 2025 Will &amp; Drew</p>
           </div>
         </div>
       )}
