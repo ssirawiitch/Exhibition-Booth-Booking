@@ -1,6 +1,6 @@
 export default async function deleteBooking(token: string, bookingId: string) {
   const response = await fetch(
-    `${process.env.BACKEND_URL}/api/v1/booking/${bookingId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/booking/${bookingId}`,
     {
       method: "DELETE",
       headers: {

@@ -4,7 +4,7 @@ interface CreateBookingParams {
   exhibitionId: string;
   token: string | null;
 }
-const API_URL = `${process.env.BACKEND_URL}/api/v1/booking`;
+const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/booking`;
 export async function createBooking({
   smallCount,
   bigCount,
