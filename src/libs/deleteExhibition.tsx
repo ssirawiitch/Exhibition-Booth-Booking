@@ -1,6 +1,6 @@
 export default async function deleteExhibition(token: string, id: string) {
 
-    const response = await fetch(`http://localhost:5000/api/v1/exhibitions/${id}`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/exhibitions/${id}`, {
         method: "DELETE",
         headers: {
         Authorization: `Bearer ${token}`,

@@ -1,6 +1,6 @@
 export default async function getExhibitionById(id: string) {
   const response = await fetch(
-    `http://localhost:5000/api/v1/exhibitions/${id}`,
+    `${process.env.BACKEND_URL}/api/v1/exhibitions/${id}`,
     {
       cache: "no-store",
     }

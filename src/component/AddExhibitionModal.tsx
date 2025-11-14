@@ -85,7 +85,7 @@ export default function AddExhibitionModal({
         posterPicture: form.posterPicture,
       };
 
-      const res = await fetch('http://localhost:5000/api/v1/exhibitions', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/exhibitions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
