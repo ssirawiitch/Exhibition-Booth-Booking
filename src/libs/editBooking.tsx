@@ -11,6 +11,7 @@ export default async function editBooking(
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify(updatedData),
     }
   );

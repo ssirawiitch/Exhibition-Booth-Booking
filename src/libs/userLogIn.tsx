@@ -5,6 +5,7 @@ export default async function userLogin(userEmail:string,userPassword:string) {
         headers: {
             "Content-Type":"application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
             email: userEmail,
             password: userPassword

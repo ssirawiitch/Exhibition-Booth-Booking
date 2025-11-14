@@ -6,6 +6,7 @@ export default async function deleteBooking(token: string, bookingId: string) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      credentials: "include",
     }
   );
 

@@ -5,6 +5,7 @@ export default async function getBookings(token: string) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+    credentials: "include",
   });
 
   if (!response.ok) {

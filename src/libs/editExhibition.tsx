@@ -6,6 +6,7 @@ export default async function editExhibition(token: string, id: string , updated
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(updatedData),
     });
 

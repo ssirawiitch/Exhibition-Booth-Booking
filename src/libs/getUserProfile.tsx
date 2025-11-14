@@ -4,6 +4,7 @@ export default async function getUserProfile(token: string) {
     headers: {
       authorization: `Bearer ${token}`,
     },
+    credentials: "include", 
   });
 
   if (!response.ok) {
