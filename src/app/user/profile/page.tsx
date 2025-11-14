@@ -4,20 +4,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import ViewProfile from "@/component/ViewProfile";
 import getUserProfile from "@/libs/getUserProfile";
-import { redirect } from "next/navigation";
 
 export default async function UserProfile() {
   const session = await getServerSession(authOptions);
   const token = session?.user?.token as string | undefined;
-
-    let userDetail = null;
-    if (session?.user?.token) {
-      userDetail = await getUserProfile(session.user.token as string);
-    }
-    const userRole = userDetail?.data?.role;
-    if (userRole !== 'member') {
-      redirect("/user/login");
-    }
 
   if (!token) {
     return (
