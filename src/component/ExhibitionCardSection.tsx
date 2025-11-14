@@ -1,6 +1,7 @@
 import Card from "./Card"
+import { ExhibitionItem, ExhibitionJson } from '../../interfaces';
 
-export default async function ExhibitionCardSection({exhibitJson}:{exhibitJson:Object}){
+export default async function ExhibitionCardSection({exhibitJson}:{exhibitJson:Promise<ExhibitionJson>}){
 
     const exhibitJsonReady = await exhibitJson
 
@@ -21,7 +22,7 @@ export default async function ExhibitionCardSection({exhibitJson}:{exhibitJson:O
                     </div>
                     ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {exhibitJsonReady.data.map((booth:Object) => (
+                        {exhibitJsonReady.data.map((booth:ExhibitionItem) => (
                           <div key={booth.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2">
             
                             {/* Card Body - Using Updated Card Component */}

@@ -1,4 +1,6 @@
-export default async function StatSection({exhibitJson}:{exhibitJson:Object}){
+import { ExhibitionJson } from "../../interfaces";
+
+export default async function StatSection({exhibitJson}:{exhibitJson:Promise<ExhibitionJson>}){
 
     const exhibitJsonReady = await exhibitJson
 
