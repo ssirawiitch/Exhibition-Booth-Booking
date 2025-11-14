@@ -1,4 +1,3 @@
-// src/app/admin/manageBooking/page.tsx
 "use client";
 
 import Header from "@/component/Header";
@@ -47,12 +46,12 @@ export default function ManageBookingPage() {
 
   useEffect(() => {
     const checkRole = async () => {
-      if (!token) return; 
+      if (!token) return;
 
       try {
-        const profile = await getUserProfile(token); 
+        const profile = await getUserProfile(token);
 
-        if (profile.role !== 'admin') {
+        if (profile.data.role !== "admin") {
           alert("Unauthorized: Only admin can access this page");
           window.location.href = "/";
         }
