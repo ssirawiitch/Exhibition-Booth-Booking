@@ -1,5 +1,5 @@
 export default async function getBookings(token: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/booking`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/api/v1/booking`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

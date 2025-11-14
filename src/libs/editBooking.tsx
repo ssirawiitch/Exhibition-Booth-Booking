@@ -4,7 +4,7 @@ export default async function editBooking(
   updatedData: any
 ) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/booking/${bookingId}`,
+    `${process.env.BACKEND_URL}/api/v1/booking/${bookingId}`,
     {
       method: "PUT",
       headers: {
