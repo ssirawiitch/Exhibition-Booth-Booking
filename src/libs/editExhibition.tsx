@@ -1,6 +1,6 @@
 export default async function editExhibition(token: string, id: string , updatedData: any) {
 
-    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/exhibitions/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/exhibitions/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
