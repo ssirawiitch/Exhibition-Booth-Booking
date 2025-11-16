@@ -39,7 +39,7 @@ export default async function HomePage() {
                   href="/user/signup"
                   className="bg-red-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl"
                 >
-                  sign up
+                  view Exhibitons
                 </Link>
               ) : userRole === "admin" ? (
                 <Link
