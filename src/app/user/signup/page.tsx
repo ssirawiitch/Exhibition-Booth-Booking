@@ -1,38 +1,42 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Calendar, Eye, EyeOff } from 'lucide-react';
+import React, { useState } from "react";
+import Link from "next/link";
+import { Calendar, Eye, EyeOff } from "lucide-react";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [role, setRole] = useState('member');
-  const [tel, setTel] = useState('');
+  const [role, setRole] = useState("member");
+  const [tel, setTel] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const userData = {
-      name: (document.getElementById('name') as HTMLInputElement)?.value,
-      email: (document.getElementById('email') as HTMLInputElement)?.value,
-      password: (document.getElementById('password') as HTMLInputElement)?.value,
+      name: (document.getElementById("name") as HTMLInputElement)?.value,
+      email: (document.getElementById("email") as HTMLInputElement)?.value,
+      password: (document.getElementById("password") as HTMLInputElement)
+        ?.value,
       tel,
-      role
+      role,
     };
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`, {
-      method : "POST",
-      headers: {
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify(userData)
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
 
-    if(!res.ok){
+    if (!res.ok) {
       const err = await res.json();
       throw new Error(err.message || "Registration failed");
-    }else{
+    } else {
       alert("Register success! You can log in now.");
       window.location.href = "/user/login";
     }
@@ -49,21 +53,32 @@ export default function SignUpPage() {
               </div>
             </div>
           </Link>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">Join ExpoBook Today</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            Join ExpoBook Today
+          </h1>
           <p className="text-xl text-gray-600 mb-8">
-            Start booking exhibition booths worldwide. Get instant confirmations, manage events seamlessly, and grow your business presence.
+            Start booking exhibition booths worldwide. Get instant
+            confirmations, manage events seamlessly, and grow your business
+            presence.
           </p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl p-12">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Create an account</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Create an account
+            </h2>
             <p className="text-red-400">Welcome to the platform</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Name
+              </label>
               <input
                 id="name"
                 type="text"
@@ -74,7 +89,12 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Email
+              </label>
               <input
                 id="email"
                 type="email"
@@ -85,7 +105,12 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="tel" className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+              <label
+                htmlFor="tel"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Phone Number
+              </label>
               <input
                 id="tel"
                 type="tel"
@@ -99,11 +124,16 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Password
+              </label>
               <div className="relative">
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="•••••••••••••••"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none pr-12"
                   required
@@ -113,13 +143,19 @@ export default function SignUpPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Role
+              </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -128,23 +164,6 @@ export default function SignUpPage() {
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>
               </select>
-            </div>
-
-            <div className="flex items-start">
-              <input
-                type="checkbox"
-                id="agreeToTerms"
-                checked={agreeToTerms}
-                onChange={(e) => setAgreeToTerms(e.target.checked)}
-                className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500 mt-1"
-                required
-              />
-              <label htmlFor="agreeToTerms" className="ml-2 text-sm text-gray-700">
-                I agree to the{' '}
-                <a href="#" className="text-red-600 hover:text-red-700 font-medium">
-                  terms of service
-                </a>
-              </label>
             </div>
 
             <button
@@ -157,7 +176,10 @@ export default function SignUpPage() {
 
           <div className="mt-8 text-center">
             <span className="text-gray-600">Already have an account? </span>
-            <Link href="/user/login" className="text-red-600 hover:text-red-700 font-medium">
+            <Link
+              href="/user/login"
+              className="text-red-600 hover:text-red-700 font-medium"
+            >
               Sign in here
             </Link>
           </div>
