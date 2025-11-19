@@ -10,7 +10,6 @@ import ExhibitionCardSection from "@/component/ExhibitionCardSection";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import getUserProfile from "@/libs/getUserProfile";
-import { redirect } from "next/navigation";
 
 export default async function ExhibitionPage() {
 
@@ -20,10 +19,6 @@ export default async function ExhibitionPage() {
   let userDetail = null;
   if (session?.user?.token) {
     userDetail = await getUserProfile(session.user.token as string);
-  }
-  const userRole = userDetail?.data?.role;
-  if (userRole !== 'member') {
-    redirect("/user/login");
   }
 
   return (
