@@ -2,17 +2,20 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Calendar, Eye, EyeOff } from "lucide-react";
+import { Calendar, Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"; // เพิ่ม icon
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [role, setRole] = useState("member");
   const [tel, setTel] = useState("");
+
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     const userData = {
       name: (document.getElementById("name") as HTMLInputElement)?.value,
@@ -37,10 +40,14 @@ export default function SignUpPage() {
         const err = await res.json();
         throw new Error(err.message || "Registration failed");
       }
+
       alert("Register success! You can log in now.");
       window.location.href = "/user/login";
     } catch (err: any) {
       setError(err.message);
+      setIsLoading(false);
+    } finally {
+      if (error) setIsLoading(false);
     }
   };
 
@@ -72,12 +79,14 @@ export default function SignUpPage() {
             </h2>
             <p className="text-red-400">Welcome to the platform</p>
           </div>
+
           {error && (
             <div
-              className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded relative"
+              className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded flex items-center shadow-sm"
               role="alert"
             >
-              <span className="block sm:inline">{error}</span>
+              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
+              <span className="font-medium">{error}</span>
             </div>
           )}
 
@@ -148,17 +157,6 @@ export default function SignUpPage() {
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none pr-12"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {/* {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )} */}
-                </button>
               </div>
             </div>
 
@@ -178,9 +176,21 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              className="w-full bg-red-600 text-white py-4 rounded-full text-lg font-medium hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg"
+              disabled={isLoading}
+              className={`w-full py-4 rounded-full text-lg font-medium shadow-lg transition-all transform flex justify-center items-center ${
+                isLoading
+                  ? "bg-red-400 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 hover:scale-105 text-white"
+              }`}
             >
-              Sign up
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                  Creating account...
+                </>
+              ) : (
+                "Sign up"
+              )}
             </button>
           </form>
 
