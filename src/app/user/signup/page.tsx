@@ -51,6 +51,34 @@ export default function SignUpPage() {
     }
   };
 
+  // Autofill sample user data for faster testing
+  const handleAutoFill = () => {
+    try {
+      const sample = {
+        name: "will",
+        email: "sirawitchwill@gmail.com",
+        tel: "0928744060",
+        role: "member",
+        password: "@S1wi+cHwill",
+      };
+
+      // set controlled fields
+      setTel(sample.tel);
+      setRole(sample.role);
+
+      // set uncontrolled inputs by id
+      const nameEl = document.getElementById("name") as HTMLInputElement | null;
+      const emailEl = document.getElementById("email") as HTMLInputElement | null;
+      const passEl = document.getElementById("password") as HTMLInputElement | null;
+
+      if (nameEl) nameEl.value = sample.name;
+      if (emailEl) emailEl.value = sample.email;
+      if (passEl) passEl.value = sample.password;
+    } catch (err) {
+      console.error("Auto-fill failed", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex items-center justify-center p-6">
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -174,24 +202,34 @@ export default function SignUpPage() {
               </select>
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full py-4 rounded-full text-lg font-medium shadow-lg transition-all transform flex justify-center items-center ${
-                isLoading
-                  ? "bg-red-400 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700 hover:scale-105 text-white"
-              }`}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                  Creating account...
-                </>
-              ) : (
-                "Sign up"
-              )}
-            </button>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleAutoFill}
+                className="w-full py-3 rounded-full text-lg font-medium shadow-sm transition-all bg-gray-100 hover:bg-gray-200 text-gray-800"
+              >
+                Auto-fill
+              </button>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full py-4 rounded-full text-lg font-medium shadow-lg transition-all transform flex justify-center items-center ${
+                  isLoading
+                    ? "bg-red-400 cursor-not-allowed"
+                    : "bg-red-600 hover:bg-red-700 hover:scale-105 text-white"
+                }`}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Sign up"
+                )}
+              </button>
+            </div>
           </form>
 
           <div className="mt-8 text-center">
