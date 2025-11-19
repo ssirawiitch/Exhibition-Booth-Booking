@@ -9,6 +9,7 @@ export default function SignUpPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [role, setRole] = useState("member");
   const [tel, setTel] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,23 +23,24 @@ export default function SignUpPage() {
       role,
     };
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      }
-    );
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        }
+      );
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || "Registration failed");
-    } else {
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Registration failed");
+      }
       alert("Register success! You can log in now.");
       window.location.href = "/user/login";
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
@@ -70,6 +72,14 @@ export default function SignUpPage() {
             </h2>
             <p className="text-red-400">Welcome to the platform</p>
           </div>
+          {error && (
+            <div
+              className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded relative"
+              role="alert"
+            >
+              <span className="block sm:inline">{error}</span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
