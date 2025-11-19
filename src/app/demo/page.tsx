@@ -96,8 +96,8 @@ export default function DemoPage() {
               onEnded={() => setIsPlaying(false)}
             >
               {/* Replace with your video file path */}
-              <source src="/vedio/demo.mp4" type="video/mp4" />
-              <source src="/vedio/demo.webm" type="video/webm" />
+              <source src="/video/demo.mp4" type="video/mp4" />
+              <source src="/video/demo.webm" type="video/webm" />
               Your browser does not support the video tag.
             </video>
 
