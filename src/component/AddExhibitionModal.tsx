@@ -111,6 +111,23 @@ export default function AddExhibitionModal({
     }
   };
 
+  // Autofill sample data (used by the Auto-fill button)
+  const handleAutoFill = () => {
+    // Assumption: user-provided date '25/11/15' is interpreted as 25 Nov 2025
+    // to satisfy the component's validation that startDate must not be in the past.
+    setForm({
+      name: 'vintage shirt',
+      description: 'old vintage soccer shirt from 1800-1900',
+      venue: 'red tower Chatuchak',
+      startDate: '2025-11-25',
+      durationDay: 7,
+      smallBoothQuota: 100,
+      bigBoothQuota: 100,
+      posterPicture:
+        'https://drive.google.com/uc?export=view&id=1E6alH3lDhvBbGfiNye5YJHGRVvaHYHUo',
+    });
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-6 z-50">
       <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -277,6 +294,13 @@ export default function AddExhibitionModal({
               className="flex-1 bg-red-600 text-white py-3 rounded-xl font-medium hover:bg-red-700 transition-all disabled:opacity-50"
             >
               {submitting ? 'Creating...' : 'Create Exhibition'}
+            </button>
+            <button
+              type="button"
+              onClick={handleAutoFill}
+              className="px-4 py-3 bg-gray-100 text-gray-800 rounded-xl font-medium hover:bg-gray-200"
+            >
+              Auto-fill
             </button>
             <button
               type="button"
